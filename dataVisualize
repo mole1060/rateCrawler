@@ -1,0 +1,8 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+raw=pd.read_csv('RateData1.csv',sep=',')
+lm = sns.lmplot(x = '0' , y = '0.2295', data = raw, fit_reg=True)
+lm.set(title = '8/15-8/19 Rate x Time')
+plt.show()
