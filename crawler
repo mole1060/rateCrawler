@@ -1,0 +1,34 @@
+from bs4 import BeautifulSoup
+import requests
+import datetime
+import csv
+
+bank=[]
+rawdata=[]
+
+#至目標網頁爬取資料
+url='https://www.findrate.tw/JPY/'
+web=requests.get(url)
+soup=BeautifulSoup(web.text,'lxml')
+#利用tag取出資料(資料清洗)
+tag1=soup.find_all('td',class_="WordB")
+tag2=soup.find_all('td',class_="bank")
+temp_rate=[]
+temp_bank=[]
+for i in tag1:temp_rate.append(i.text.strip())
+for i in tag2:temp_bank.append(i.text.strip())
+for i in temp_bank:   
+    if i not in bank:
+        bank.append(i) 
+        
+#整合資料
+for i in range((len(temp_bank)+len(temp_rate))):
+    if i%7==0:
+        rawdata.append(temp_bank.pop(0))
+    else:rawdata.append(temp_rate.pop(0))
+rawdata.insert(0,str(datetime.date.today()))
+
+#寫出資料
+with open('RateData.csv','a',newline='',encoding='utf8')as data:
+        writefile=csv.writer(data)
+        writefile.writerow(rawdata)
